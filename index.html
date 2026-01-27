@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGIS Sistem Informasi Pertanahan - Bekasi</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header id="navbar">
+        <div class="container">
+            <div class="logo">
+                <img src="asset/logo-new-unjani-.png" alt="Logo UNJANI" width="100"> 
+                <h1>WebGIS Sistem Informasi Pertanahan<br><small style="font-size: 0.8em; font-weight: 400;">Kota Bekasi</small></h1>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="#hero-section">Home</a></li>
+                <li><a href="#map-section">Peta</a></li>
+                <li><a href="#data-section">Data</a></li>
+                <li><a href="#author-section">Author</a></li>
+                <li><a href="#footer">Kontak</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section id="hero-section">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Selamat Datang</h1>
+            <p class="lead">Portal WebGIS untuk Eksplorasi Data Aset Pertanahan Kota Bekasi</p>
+            <a href="#map-section" class="btn btn-primary btn-lg mt-3">Mulai Jelajahi Peta</a>
+        </div>
+    </section>
+
+    <section id="map-section">
+        <div class="container">
+            <div class="section-title text-center mb-4">
+                <h2>Peta Persebaran Aset Tanah</h2>
+                <p>Visualisasi interaktif data pertanahan di wilayah Bekasi.</p>
+            </div>
+            <div id="map"></div>
+        </div>
+    </section>
+
+    <section id="data-section" class="container">
+        <div class="text-center mb-5">
+            <h2>Data Tersedia</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <img src="https://via.placeholder.com/400x200?text=Sertifikat+Tanah" class="card-img-top" alt="Data 1">
+                    <div class="card-body">
+                        <h5 class="card-title">Sertifikat Hak Milik (SHM)</h5>
+                        <p class="card-text">Data spasial persebaran bidang tanah bersertifikat hak milik.</p>
+                        <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <img src="https://via.placeholder.com/400x200?text=Zona+Nilai+Tanah" class="card-img-top" alt="Data 2">
+                    <div class="card-body">
+                        <h5 class="card-title">Zona Nilai Tanah (ZNT)</h5>
+                        <p class="card-text">Peta Zona Nilai Tanah untuk referensi harga pasar dan pajak.</p>
+                        <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <img src="https://via.placeholder.com/400x200?text=Penggunaan+Lahan" class="card-img-top" alt="Data 3">
+                    <div class="card-body">
+                        <h5 class="card-title">Penggunaan Lahan</h5>
+                        <p class="card-text">Peta eksisting penggunaan lahan (Land Use) tahun 2024.</p>
+                        <a href="#" class="btn btn-outline-primary">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="author-section">
+        <div class="container">
+            <h2>Tentang Pembuat</h2>
+            <hr class="w-25 mx-auto mb-4">
+            
+            <img 
+                src="asset/foto-rifqi.jpg" 
+                alt="Rifqi Khairul Amil" 
+                class="author-img"
+                onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=Foto+Tidak+Ditemukan';"
+            >
+            
+            <h3>Rifqi Khairul Amil | 2350241006</h3>
+            <p class="text-muted">Teknik Geomatika UNJANI</p>
+            <div class="col-md-8 mx-auto">
+                <p>WebGIS ini disusun sebagai Tugas Dan UAS Sistem Informasi Pertanahan untuk memvisualisasikan data aset pertanahan di Kota Bekasi.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer">
+        <div class="container">
+            <h3>Hubungi Kami</h3>
+            <p>Email: rifqikkhairulaamil@gmail.com | WA: Tidak punya</p>
+            <div class="social-links mt-3">
+                <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-white me-3"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="text-white me-3"><i class="fab fa-github"></i></a>
+            </div>
+            <div class="copyright mt-4">
+                &copy; 2026 <strong><span>Teknik Geomatika UNJANI</span></strong>.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>

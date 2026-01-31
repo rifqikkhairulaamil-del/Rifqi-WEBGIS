@@ -3,27 +3,84 @@ const map = L.map('map', { zoomControl: false }).setView([-6.28, 106.97], 12);
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
 // 2. Konfigurasi Basemap
+// 2. Konfigurasi Basemap Lengkap
 const basemapOptions = [
-    { id: 'street', name: 'OpenStreet', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', thumb: 'https://a.tile.openstreetmap.org/12/2126/1865.png' },
-    { id: 'dark', name: 'Dark Matter', url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', thumb: 'https://a.basemaps.cartocdn.com/dark_all/12/2126/1865.png' },
-    { id: 'sat', name: 'Satellite', url: 'http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', thumb: 'https://khms1.google.com/kh/v=908?x=2126&y=1865&z=12' },
-    { id: 'hybrid', name: 'Hybrid', url: 'http://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', thumb: 'https://mt1.google.com/vt/lyrs=y&x=2126&y=1865&z=12' }
+    { 
+        id: 'street', 
+        name: 'OpenStreet', 
+        url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', 
+        sub: ['a','b','c'],
+        thumb: 'https://a.tile.openstreetmap.org/12/2126/1865.png',
+        attribution: '&copy; OpenStreetMap contributors'
+    },
+    { 
+        id: 'satellite', 
+        name: 'Satellite', 
+        url: 'https://mt{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', 
+        sub: ['0','1','2','3'],
+        thumb: 'https://khms1.google.com/kh/v=908?x=2126&y=1865&z=12',
+        attribution: '&copy; Google Maps'
+    },
+    { 
+        id: 'hybrid', 
+        name: 'Hybrid', 
+        url: 'https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', 
+        sub: ['0','1','2','3'],
+        thumb: 'https://mt1.google.com/vt/lyrs=y&x=2126&y=1865&z=12',
+        attribution: '&copy; Google Maps'
+    },
+    { 
+        id: 'terrain', 
+        name: 'Terrain', 
+        url: 'https://mt{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', 
+        sub: ['0','1','2','3'],
+        thumb: 'https://mt1.google.com/vt/lyrs=p&x=2126&y=1865&z=12',
+        attribution: '&copy; Google Maps'
+    },
+    { 
+        id: 'dark', 
+        name: 'Dark Matter', 
+        url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', 
+        sub: ['a','b','c','d'],
+        thumb: 'https://a.basemaps.cartocdn.com/dark_all/12/2126/1865.png',
+        attribution: '&copy; CartoDB'
+    },
+    { 
+        id: 'topo', 
+        name: 'Esri Topo', 
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', 
+        sub: [],
+        thumb: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/12/2513/1324',
+        attribution: '&copy; Esri'
+    }
 ];
 
-let currentLayer = L.tileLayer(basemapOptions[0].url).addTo(map);
+let currentLayer = L.tileLayer(basemapOptions[0].url, {
+    attribution: basemapOptions[0].attribution
+}).addTo(map);
 
 function initBasemapGallery() {
     const gallery = document.getElementById('basemap-gallery');
+    gallery.innerHTML = ''; // Clear gallery sebelum render
+    
     basemapOptions.forEach(bm => {
         const col = document.createElement('div');
         col.className = `col-4 basemap-card ${bm.id === 'street' ? 'active' : ''}`;
         col.id = `bm-${bm.id}`;
-        col.innerHTML = `<img src="${bm.thumb}"><span>${bm.name}</span>`;
+        col.innerHTML = `
+            <img src="${bm.thumb}" alt="${bm.name}" onerror="this.src='https://via.placeholder.com/80?text=Map'">
+            <span>${bm.name}</span>
+        `;
+        
         col.onclick = () => {
             document.querySelectorAll('.basemap-card').forEach(el => el.classList.remove('active'));
             col.classList.add('active');
+            
             map.removeLayer(currentLayer);
-            currentLayer = L.tileLayer(bm.url, { subdomains:['mt0','mt1','mt2','mt3'] }).addTo(map);
+            currentLayer = L.tileLayer(bm.url, { 
+                subdomains: bm.sub,
+                attribution: bm.attribution 
+            }).addTo(map);
         };
         gallery.appendChild(col);
     });
@@ -129,3 +186,4 @@ function searchVillage() {
 
 initBasemapGallery();
 loadLayers();
+

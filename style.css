@@ -8,7 +8,6 @@ body {
 
 .wrapper { display: flex; width: 100%; height: 100vh; }
 
-/* Sidebar UI */
 #sidebar {
     width: 320px;
     background: #ffffff;
@@ -23,7 +22,6 @@ body {
 #content { flex-grow: 1; position: relative; }
 #map { height: 100%; width: 100%; }
 
-/* Basemap Gallery UI */
 .basemap-card { cursor: pointer; text-align: center; margin-bottom: 5px; }
 .basemap-card img { 
     width: 100%; height: 55px; 
@@ -33,7 +31,6 @@ body {
 .basemap-card span { font-size: 10px; font-weight: 700; display: block; margin-top: 3px; color: #444; }
 .basemap-card.active img { border-color: #0d6efd; box-shadow: 0 0 10px rgba(13,110,253,0.3); }
 
-/* Detail Panel UI */
 .detail-panel {
     position: absolute;
     top: 20px;
@@ -52,7 +49,6 @@ body {
 .attr-table td { padding: 8px; border-bottom: 1px solid #f0f0f0; }
 .attr-key { font-weight: bold; color: #666; width: 40%; text-transform: uppercase; }
 
-/* Floating Author */
 .author-floating {
     position: absolute;
     top: 20px;
@@ -71,4 +67,3 @@ body {
     font-size: 0.85rem; border: 1px solid #f0f0f0;
 }
 .x-small { font-size: 0.7rem; }
-

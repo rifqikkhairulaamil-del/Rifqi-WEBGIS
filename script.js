@@ -6,10 +6,8 @@ L.control.zoom({ position: 'bottomright' }).addTo(map);
 const basemapOptions = [
     { id: 'street', name: 'OpenStreet', url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', thumb: 'https://a.tile.openstreetmap.org/12/2126/1865.png' },
     { id: 'dark', name: 'Dark Matter', url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', thumb: 'https://a.basemaps.cartocdn.com/dark_all/12/2126/1865.png' },
-    { id: 'light', name: 'Positron', url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', thumb: 'https://a.basemaps.cartocdn.com/light_all/12/2126/1865.png' },
     { id: 'sat', name: 'Satellite', url: 'http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', thumb: 'https://khms1.google.com/kh/v=908?x=2126&y=1865&z=12' },
-    { id: 'hybrid', name: 'Hybrid', url: 'http://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', thumb: 'https://mt1.google.com/vt/lyrs=y&x=2126&y=1865&z=12' },
-    { id: 'terrain', name: 'Terrain', url: 'http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', thumb: 'https://mt1.google.com/vt/lyrs=p&x=2126&y=1865&z=12' }
+    { id: 'hybrid', name: 'Hybrid', url: 'http://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', thumb: 'https://mt1.google.com/vt/lyrs=y&x=2126&y=1865&z=12' }
 ];
 
 let currentLayer = L.tileLayer(basemapOptions[0].url).addTo(map);
@@ -31,21 +29,18 @@ function initBasemapGallery() {
     });
 }
 
-// 3. Konfigurasi GIS & Layer
-const styles = {
-    desa: { fillColor: "#2ecc71", color: "#1b8a4a", weight: 1.5, fillOpacity: 0.3 },
-    jalan: { color: "#e74c3c", weight: 2 },
-    sungai: { color: "#3498db", weight: 2 }
-};
-
+// 3. Konfigurasi GIS & Layer (Semua Path diubah ke asset/)
 let geoLayers = {};
 
 async function loadLayers() {
     const datasets = [
-        { id: 'desa', url: 'asset/ADMINISTRASIDESA_AR_25K.geojson', style: styles.desa, name: 'Wilayah Desa' },
-        { id: 'jalan', url: 'asset/JALAN_LN_25K.geojson', style: styles.jalan, name: 'Jaringan Jalan' },
-        { id: 'sungai', url: 'asset/SUNGAI_LN_25K.geojson', style: styles.sungai, name: 'Aliran Sungai' },
-        { id: 'sekolah', url: 'asset/PENDIDIKAN_PT_25K.geojson', name: 'Fasilitas Pendidikan', type: 'point', color: '#f1c40f' }
+        { id: 'desa', url: 'asset/ADMINISTRASIDESA_AR_25K.geojson', name: 'Batas Desa', color: '#2ecc71', type: 'area' },
+        { id: 'jalan', url: 'asset/JALAN_LN_25K.geojson', name: 'Jaringan Jalan', color: '#e74c3c', type: 'line' },
+        { id: 'sungai', url: 'asset/SUNGAI_LN_25K.geojson', name: 'Aliran Sungai', color: '#3498db', type: 'line' },
+        { id: 'admin_ln', url: 'asset/ADMINISTRASI_LN_25K.geojson', name: 'Garis Administrasi', color: '#34495e', type: 'line' },
+        { id: 'sekolah', url: 'asset/PENDIDIKAN_PT_25K.geojson', name: 'Sekolah', color: '#f1c40f', type: 'point' },
+        { id: 'stasiun', url: 'asset/STASIUNKA_PT_25K.geojson', name: 'Stasiun KA', color: '#9b59b6', type: 'point' },
+        { id: 'bangunan', url: 'asset/BANGUNAN_PT_25K.geojson', name: 'Bangunan', color: '#7f8c8d', type: 'point' }
     ];
 
     for (const ds of datasets) {
@@ -54,7 +49,9 @@ async function loadLayers() {
             const data = await res.json();
             
             geoLayers[ds.id] = L.geoJSON(data, {
-                style: ds.style || null,
+                style: function() {
+                    return ds.type === 'area' ? { fillColor: ds.color, color: "#1b8a4a", weight: 1.5, fillOpacity: 0.3 } : { color: ds.color, weight: 2 };
+                },
                 pointToLayer: (feature, latlng) => {
                     return ds.type === 'point' ? L.circleMarker(latlng, { radius: 5, fillColor: ds.color, color: "#fff", weight: 1, fillOpacity: 1 }) : null;
                 },
@@ -64,29 +61,19 @@ async function loadLayers() {
                         const lat = e.latlng.lat.toFixed(6);
                         const lng = e.latlng.lng.toFixed(6);
                         
-                        // Popup Konten
                         const popupContent = `
                             <div class="custom-popup">
                                 <h6 class="fw-bold text-primary mb-1">${ds.name}</h6>
-                                <div class="d-flex align-items-center mb-1">
-                                    <i class="fas fa-map-marker-alt text-danger me-2"></i>
-                                    <span class="small fw-bold">${f.properties.NAMOBJ || 'Tanpa Nama'}</span>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <i class="fas fa-crosshairs text-secondary me-2"></i>
-                                    <span class="x-small text-muted">${lat}, ${lng}</span>
-                                </div>
+                                <span class="small fw-bold">${f.properties.NAMOBJ || 'Tanpa Nama'}</span>
                                 <button class="btn btn-sm btn-primary w-100 mt-2" onclick="focusObject(${lat}, ${lng})">Fokus</button>
                             </div>`;
                         l.bindPopup(popupContent).openPopup();
-                        
-                        // Update Panel Detail
                         showDetailPanel(f.properties, ds.name, lat, lng);
                     });
                 }
             }).addTo(map);
             
-            addSidebarToggle(ds.id, ds.name, ds.style?.color || ds.color);
+            addSidebarToggle(ds.id, ds.name, ds.color);
         } catch (e) { 
             console.warn(`Gagal memuat layer ${ds.name}:`, e); 
         }
@@ -99,16 +86,7 @@ function showDetailPanel(props, layerName, lat = null, lng = null) {
     const content = document.getElementById('detail-content');
     panel.classList.add('active');
     
-    let html = '';
-    if (lat && lng) {
-        html += `
-            <div class="mb-3 p-2 bg-light rounded border">
-                <small class="fw-bold text-uppercase d-block mb-1 text-muted">Koordinat</small>
-                <code class="text-primary">${lat}, ${lng}</code>
-            </div>`;
-    }
-    
-    html += `<h6 class="fw-bold text-primary mb-3">${layerName}</h6><table class="attr-table">`;
+    let html = `<h6>${layerName}</h6><table class="attr-table">`;
     for (let key in props) {
         html += `<tr><td class="attr-key">${key}</td><td>${props[key] || '-'}</td></tr>`;
     }
@@ -116,9 +94,7 @@ function showDetailPanel(props, layerName, lat = null, lng = null) {
     content.innerHTML = html;
 }
 
-function closeDetailPanel() { 
-    document.getElementById('detail-panel').classList.remove('active'); 
-}
+function closeDetailPanel() { document.getElementById('detail-panel').classList.remove('active'); }
 
 function addSidebarToggle(id, name, color) {
     const list = document.getElementById('layer-list');
@@ -137,24 +113,19 @@ function toggleLayer(id) {
     else map.addLayer(geoLayers[id]);
 }
 
-function focusObject(lat, lng) {
-    map.flyTo([lat, lng], 16);
-}
+function focusObject(lat, lng) { map.flyTo([lat, lng], 16); }
 
 function searchVillage() {
     const term = document.getElementById('searchDesa').value.toLowerCase();
     if (!geoLayers['desa']) return;
-
     geoLayers['desa'].eachLayer(l => {
-        const name = (l.feature.properties.NAMOBJ || "").toLowerCase();
-        if(name.includes(term)) {
+        if((l.feature.properties.NAMOBJ || "").toLowerCase().includes(term)) {
             const center = l.getBounds().getCenter();
             map.flyTo(center, 14);
-            showDetailPanel(l.feature.properties, "Wilayah Desa", center.lat.toFixed(6), center.lng.toFixed(6));
+            showDetailPanel(l.feature.properties, "Batas Desa", center.lat, center.lng);
         }
     });
 }
 
-// Jalankan Fungsi
 initBasemapGallery();
 loadLayers();
